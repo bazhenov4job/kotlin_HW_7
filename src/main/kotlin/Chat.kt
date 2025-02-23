@@ -1,4 +1,4 @@
-package ru.netology
+
 
 data class Chat (
     val id: Int,
