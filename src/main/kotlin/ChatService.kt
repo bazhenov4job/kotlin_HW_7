@@ -41,6 +41,7 @@ object ChatService {
             return 0
         }
         chatList -= chatToDelete.toSet()
+        //находим все сообщения, которые не содержат id удаляемого чата и заменяем содежимое списка сообщений
         messageList = messageList.filter(fun(message: Message) = (message.chatId != id)) as MutableList<Message>
         return 1
     }
