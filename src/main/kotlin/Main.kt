@@ -1,5 +1,7 @@
 package ru.netology
 
+import ChatService
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
@@ -13,6 +15,18 @@ fun main() {
         return@lambda number < 4
     }
     println(filteredList2)
+
+    ChatService.createMessage(1, 1, 2, "Привет! Как дела?", false)
+    ChatService.createMessage(1, 2, 1, "Привет! А у тебя?", false)
+    ChatService.createMessage(2, 1, 3, "Привет! Что нового?", false)
+    ChatService.createMessage(2, 3, 1, "Привет! Последнее 2?", false)
+    ChatService.createMessage(3, 1, 4, "Привет! Что нового?", false)
+    ChatService.createMessage(3, 4, 1, "Привет! Что нового?", false)
+    ChatService.createMessage(3, 5, 1, "Привет! Последнее 3?", false)
+    ChatService.createMessage(4, 1, 5, "Привет! Последнее 4?", false)
+    println(ChatService.getChats())
+    println(ChatService.getLastMessages())
+
 }
 
 fun moreThanSix(number: Int): Boolean{

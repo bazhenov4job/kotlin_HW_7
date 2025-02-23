@@ -45,6 +45,22 @@ object ChatService {
         return 1
     }
 
+    fun getChats(): MutableList<Chat> {
+        return chatList
+    }
+
+    fun getLastMessages(): MutableList<Message> {
+        if (chatList.isEmpty()) {
+            println("нет сообщений")
+            return messageList
+        }
+        var lastMessageList = mutableListOf<Message?>()
+        for (chat in chatList) {
+            lastMessageList.add(messageList.findLast {message: Message -> chat.id == message.chatId})
+        }
+        return lastMessageList as MutableList<Message>
+    }
+
     fun clear() {
         chatList.clear()
         messageList.clear()
