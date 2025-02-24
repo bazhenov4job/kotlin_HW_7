@@ -62,10 +62,23 @@ object ChatService {
         return lastMessageList as MutableList<Message>
     }
 
+    fun getUnreadChatsCount(): Int {
+        val unreadMessageList = messageList.filter{message: Message -> !message.isRead}
+        var uniqueChatId = mutableListOf<Int>()
+        // понятия не имею, как согласно заданию забрать уникальные элементы из списка
+        for(message in unreadMessageList) {
+            if (message.chatId !in uniqueChatId) {
+                uniqueChatId += message.chatId
+            }
+        }
+        return uniqueChatId.size
+    }
+
     fun clear() {
         chatList.clear()
         messageList.clear()
         messageCounter = 0
         chatCounter = 0
     }
+
 }

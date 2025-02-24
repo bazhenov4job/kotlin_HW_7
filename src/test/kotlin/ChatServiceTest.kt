@@ -70,4 +70,19 @@ class ChatServiceTest {
 
         assertEquals(listToCompare, result)
     }
+
+    @Test
+    fun getUnreadChatsCount() {
+        ChatService.createMessage(1, 1, 2, "Привет! Как дела?", false)
+        ChatService.createMessage(1, 2, 1, "Привет! А у тебя?", true)
+        ChatService.createMessage(2, 1, 3, "Привет! Что нового?", true)
+        ChatService.createMessage(2, 3, 1, "Привет! Последнее 2?", true)
+        ChatService.createMessage(3, 1, 4, "Привет! Что нового?", true)
+        ChatService.createMessage(3, 4, 1, "Привет! Что нового?", true)
+        ChatService.createMessage(3, 5, 1, "Привет! Последнее 3?", false)
+        ChatService.createMessage(4, 1, 5, "Привет! Последнее 4?", true)
+
+        val result = ChatService.getUnreadChatsCount()
+        assertEquals(2, result)
+    }
 }
