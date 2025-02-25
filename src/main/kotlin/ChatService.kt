@@ -74,6 +74,16 @@ object ChatService {
         return uniqueChatId.size
     }
 
+    fun getMessageById(id: Int, count: Int): List<Message> {
+        val allMessageById = messageList.filter{message: Message -> message.senderId == id}
+        val messageToGet = allMessageById.filterIndexed(){index, message: Message -> index < count}
+        //тут я тоже не знаю, как перебрать лямбдой все элементы(ещё и условие, что только логическое выражение)
+        for (message in messageToGet) {
+            message.isRead = true
+        }
+        return messageToGet
+    }
+
     fun clear() {
         chatList.clear()
         messageList.clear()

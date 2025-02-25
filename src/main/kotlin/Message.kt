@@ -6,6 +6,6 @@ data class Message (
     val senderId: Int,
     val receiverId: Int,
     val text: String,
-    val isRead: Boolean
+    var isRead: Boolean
 ) {
 }
