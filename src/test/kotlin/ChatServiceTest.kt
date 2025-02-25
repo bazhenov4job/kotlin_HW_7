@@ -50,6 +50,14 @@ class ChatServiceTest {
         assertEquals(1,result)
     }
 
+    @Test(expected = ChatNotFoundException::class)
+    fun deleteChatNotFound() {
+        ChatService.createMessage(1, 1, 2, "Привет! Как дела?", false)
+        ChatService.createMessage(1, 2, 1, "Привет! А у тебя?", false)
+        ChatService.createMessage(2, 2, 3, "Привет! Что нового?", false)
+        val result = ChatService.deleteChat(3)
+    }
+
     @Test
     fun getLastMessages() {
         val listToCompare = mutableListOf(

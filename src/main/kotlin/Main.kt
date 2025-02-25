@@ -26,7 +26,7 @@ fun main() {
     ChatService.createMessage(3, 4, 1, "Привет! Что нового3?", true)
     ChatService.createMessage(3, 5, 1, "Привет! Последнее 3?", false)
     ChatService.createMessage(4, 1, 5, "Привет! Последнее 4?", true)
-    println(ChatService.getMessageById(4, 3))
+    println(ChatService.getMessageById(4, 4))
 //    println(ChatService.getUnreadChatsCount())
 //    println(ChatService.getChats())
 //    println(ChatService.getLastMessages())

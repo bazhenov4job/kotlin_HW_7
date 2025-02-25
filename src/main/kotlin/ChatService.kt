@@ -38,7 +38,7 @@ object ChatService {
     fun deleteChat(id: Int): Int {
         val chatToDelete = chatList.filter(fun(chat: Chat) = (chat.id == id))
         if (chatToDelete.isEmpty()) {
-            return 0
+            throw ChatNotFoundException("Нет чата с ID $id")
         }
         chatList -= chatToDelete.toSet()
         //находим все сообщения, которые не содержат id удаляемого чата и заменяем содежимое списка сообщений
