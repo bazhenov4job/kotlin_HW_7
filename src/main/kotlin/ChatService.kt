@@ -50,18 +50,22 @@ object ChatService {
         return chatList
     }
 
-    fun getLastMessages(): MutableList<out Message?> {
+    fun getLastMessages(): MutableList<Message> {
         if (chatList.isEmpty()) {
-            println("нет сообщений")
-            return messageList
+            return mutableListOf(
+                Message(messageCounter + 1, 0, 0, 0, "Нет сообщений", false)
+            )
         }
-        var lastMessageList = mutableListOf<Message?>()
+        var lastMessageList = mutableListOf<Message>()
         for (chat in chatList) {
-            lastMessageList.add(messageList.findLast {message: Message -> chat.id == message.chatId})
+            lastMessageList.add(
+                messageList.findLast {message: Message ->
+                    chat.id == message.chatId
+                } ?: Message(messageCounter + 1, 0, 0, 0, "Нет сообщений", false))
         }
         // такой вариант считается небезопасным в случае пустого массива
         //        return lastMessageList as MutableList<Message>
-        return lastMessageList.toMutableList()
+        return lastMessageList
     }
 
     fun getUnreadChatsCount(): Int {
