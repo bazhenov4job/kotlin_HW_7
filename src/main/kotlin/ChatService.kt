@@ -26,8 +26,10 @@ object ChatService {
     }
 
     fun deleteMessage(id: Int): Int {
-        val messageToDelete = messageList.filter(fun(message: Message) = (message.id == id))
-        if (messageToDelete.isEmpty()) {
+        var returnCode = 1
+        val messageToDelete = messageList.asSequence()
+            .filter(fun(message: Message) = (message.id == id))
+        if (messageToDelete.toList().isEmpty()) {
             // сюда можно добавить исключение
             return 0
         }
@@ -36,10 +38,9 @@ object ChatService {
     }
 
     fun deleteChat(id: Int): Int {
-        val chatToDelete = chatList.filter(fun(chat: Chat) = (chat.id == id))
-        if (chatToDelete.isEmpty()) {
-            throw ChatNotFoundException("Нет чата с ID $id")
-        }
+        val chatToDelete = chatList
+            .filter(fun(chat: Chat) = (chat.id == id))
+            .ifEmpty { throw ChatNotFoundException("Нет чата с ID $id") }
         chatList -= chatToDelete.toSet()
         //находим все сообщения, которые не содержат id удаляемого чата и заменяем содежимое списка сообщений
         messageList = messageList.filter(fun(message: Message) = (message.chatId != id)) as MutableList<Message>
@@ -51,43 +52,34 @@ object ChatService {
     }
 
     fun getLastMessages(): MutableList<Message> {
-        if (chatList.isEmpty()) {
-            return mutableListOf(
-                Message(messageCounter + 1, 0, 0, 0, "Нет сообщений", false)
-            )
-        }
-        var lastMessageList = mutableListOf<Message>()
-        for (chat in chatList) {
-            lastMessageList.add(
-                messageList.findLast {message: Message ->
-                    chat.id == message.chatId
-                } ?: Message(messageCounter + 1, 0, 0, 0, "Нет сообщений", false))
-        }
-        // такой вариант считается небезопасным в случае пустого массива
-        //        return lastMessageList as MutableList<Message>
-        return lastMessageList
+
+        var lastMessageList = messageList.asSequence()
+            .groupBy { it.chatId }
+            .map {it.value.last()}
+            .ifEmpty { Message(messageCounter + 1, 0, 0, 0, "Нет сообщений", false) }
+
+        return lastMessageList as MutableList<Message>
     }
 
     fun getUnreadChatsCount(): Int {
-        val unreadMessageList = messageList.filter{message: Message -> !message.isRead}
-        var uniqueChatId = mutableListOf<Int>()
-        // понятия не имею, как согласно заданию забрать уникальные элементы из списка
-        for(message in unreadMessageList) {
-            if (message.chatId !in uniqueChatId) {
-                uniqueChatId += message.chatId
-            }
-        }
-        return uniqueChatId.size
+        val unreadMessageCount = messageList.asSequence()
+            .filter{message: Message -> !message.isRead}
+            .map {message: Message ->  message.chatId}
+            .distinct()
+            .count()
+
+        return unreadMessageCount
     }
 
     fun getMessageById(id: Int, count: Int): List<Message> {
-        val allMessageById = messageList.filter{message: Message -> message.senderId == id}
-        val messageToGet = allMessageById.filterIndexed(){index, message: Message -> index < count}
-        //тут я тоже не знаю, как перебрать лямбдой все элементы(ещё и условие, что только логическое выражение)
-        for (message in messageToGet) {
-            message.isRead = true
-        }
-        return messageToGet
+
+        val messageToGet = messageList.asSequence()
+            .filter{ message: Message -> message.senderId == id}
+            .take(count)
+            // в отличие от forEach выполняет преобразование НАД элементом, а не меняет его тип
+            .onEach {message: Message ->  message.isRead = true}
+
+        return messageToGet.toList()
     }
 
     fun clear() {
